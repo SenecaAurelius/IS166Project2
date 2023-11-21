@@ -1,10 +1,9 @@
 package org.example;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,11 +11,13 @@ public class DiamondPrinting extends PyramidTest  {
     public static void main(String[] args) throws IOException {
         FileInputStream fis = null;
 
+        File file = null;
+
         while(fis == null){
             System.out.println("What is the location of the file?");
             Scanner input = new Scanner(System.in);
             String fileLocation = input.next();
-            File file = new File(fileLocation);
+            file = new File(fileLocation);
 
             try {
                 fis = new FileInputStream(file);
@@ -37,18 +38,44 @@ public class DiamondPrinting extends PyramidTest  {
         }
 
         int numOfDiamonds = charArray.size();
-        int rows = Integer.valueOf(charArray.get(0)) * 2 + 1;
-        int columns = rows;
-        int centerDiamondNumber = Integer.valueOf(charArray.get(0));
+        //output_MM-DD-YYYY_HH_MM_SS.txt
+        Date today = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy_hh_mm_ss");
+        String fileName = "output_" + formatter.format(today) + ".txt";
 
-        char[][][] wholeDiamond = new char[numOfDiamonds][rows][columns];
-        for(int i = 0; i < numOfDiamonds - 1; i++){
-            List<char[]> rowList = new ArrayList<>();
-            wholeDiamond[0][i] = generateColumn(i, centerDiamondNumber);
-            for(int j = 0; j < wholeDiamond[0][i].length; j++){
-                System.out.print(wholeDiamond[0][i][j]);
+        try {
+            FileWriter myWriter = new FileWriter(file.getParent() + "/" + fileName);
+            for(int i = 0; i < numOfDiamonds; i++){
+                List<char[]> rowList = new ArrayList<>();
+                int centerDiamondNumber = Integer.valueOf(charArray.get(0)) - 48;
+
+                for(int j = 0; j <= centerDiamondNumber; j++){
+                    rowList.add(generateColumn(j, centerDiamondNumber));
+                }
+
+            for(int j = 0; j < rowList.size(); j++){
+                for(int k = 0; k < rowList.get(j).length; k++){
+                    System.out.println(rowList.get(j)[k]);
+                }
+                System.out.println();
             }
-            System.out.println();
+
+                //prints bottom half
+                for(int j = rowList.size() - 2; j >= 0; j--){
+                    rowList.add(rowList.get(j));
+                }
+                //output_MM-DD-YYYY_HH_MM_SS.txt
+                for(char[] aRow : rowList){
+                    for(int b = 0; b < aRow.length; b++){
+                        myWriter.write(aRow[b]);
+                    }
+                    myWriter.write("\n");
+                }
+            }
+            myWriter.close();
+        } catch(Exception e) {
+            System.out.println("An error occurred. Please try again.");
+            e.printStackTrace();
         }
     }
 
