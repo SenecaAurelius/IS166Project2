@@ -47,7 +47,7 @@ public class DiamondPrinting extends PyramidTest  {
             FileWriter myWriter = new FileWriter(file.getParent() + "/" + fileName);
             for(int i = 0; i < numOfDiamonds; i++){
                 List<char[]> rowList = new ArrayList<>();
-                int centerDiamondNumber = Integer.valueOf(charArray.get(0)) - 48;
+                int centerDiamondNumber = Integer.valueOf(charArray.get(i)) - 48;
 
                 for(int j = 0; j <= centerDiamondNumber; j++){
                     rowList.add(generateColumn(j, centerDiamondNumber));
